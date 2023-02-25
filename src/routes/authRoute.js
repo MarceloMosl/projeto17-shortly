@@ -6,6 +6,6 @@ import { schemaUser } from "../schemas/signUpSchema.js";
 const authRoute = Router();
 
 authRoute.post("/signup", validateSchema(schemaUser), signUp);
-authRoute.post("/singin", signIn);
+authRoute.post("/signin", signIn);
 
 export default authRoute;
