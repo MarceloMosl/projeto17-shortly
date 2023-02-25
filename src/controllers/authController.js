@@ -31,9 +31,9 @@ export async function signIn(req, res) {
     email,
   ]);
 
-  if (userCheck.rows.length === 0) return res.sendStatus(409);
+  if (userCheck.rows.length === 0) return res.sendStatus(401);
   if (!bcrypt.compareSync(password, userCheck.rows[0].password))
-    return res.sendStatus(409);
+    return res.sendStatus(401);
 
   try {
     const token = uuid();
