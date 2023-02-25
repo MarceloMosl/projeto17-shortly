@@ -10,8 +10,7 @@ export async function signUp(req, res) {
   ]);
 
   if (emailCheck.rows.length !== 0) return res.sendStatus(409);
-  if (password !== confirmPassword)
-    return res.status(400).send("Passwords dont match");
+  if (password !== confirmPassword) return res.sendStatus(422);
 
   try {
     const passwordEncript = bcrypt.hashSync(password, 10);
