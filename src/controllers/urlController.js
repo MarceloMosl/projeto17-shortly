@@ -46,7 +46,7 @@ export async function getUrl(req, res) {
   try {
     const promise = await db.query("SELECT * FROM urls WHERE id = $1", [id]);
 
-    if (promise.rows.length === 0) return res.status(404);
+    if (promise.rows.length === 0) return res.sendStatus(404);
 
     return res.send({
       id: promise.rows[0].id,
@@ -73,4 +73,37 @@ export async function openUrl(req, res) {
   );
 
   return res.redirect(validateUrl.rows[0].fullUrl);
+}
+
+export async function deleteUrl(req, res) {
+  const { authorization } = req.headers;
+  const { id } = req.params;
+
+  if (!authorization) return res.sendStatus(401);
+
+  const token = authorization?.replace("Bearer ", "");
+
+  if (!token) return res.sendStatus(401);
+
+  const tokenActive = await db.query(
+    "SELECT * FROM sessions WHERE token = $1",
+    [token]
+  );
+
+  if (tokenActive.rows.length === 0) return res.sendStatus(401);
+
+  const userId = tokenActive.rows[0].userId;
+
+  const validateDelete = db.query("SELECT * FROM urls WHERE id = $1", [id]);
+
+  try {
+    if (validateDelete.rows.length == 0) return res.sendStatus(404);
+    if (userId !== validateDelete.rows[0].userId) return res.sendStatus(401);
+
+    await db.query("DELETE urls WHERE id = $1", [id]);
+
+    return res.sendStatus(204);
+  } catch (error) {
+    return res.sedn(error);
+  }
 }
