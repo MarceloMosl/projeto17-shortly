@@ -44,9 +44,7 @@ export async function getUrl(req, res) {
   const { id } = req.params;
 
   try {
-    const promise = await db.query('SELECT * FROM urls WHERE "shortUrl" = $1', [
-      id,
-    ]);
+    const promise = await db.query("SELECT * FROM urls WHERE id = $1", [id]);
 
     if (promise.rows.length === 0) return res.status(404);
 
