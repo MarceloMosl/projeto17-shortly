@@ -79,7 +79,7 @@ export async function deleteUrl(req, res) {
   const { authorization } = req.headers;
   const { id } = req.params;
 
-  if (typeof id !== Number) return res.sendStatus(400);
+  if (Number(id) == NaN) return res.sendStatus(400);
   if (!authorization) return res.sendStatus(401);
 
   const token = authorization?.replace("Bearer ", "");
@@ -103,7 +103,7 @@ export async function deleteUrl(req, res) {
     if (validateDelete.rows.length == 0) return res.sendStatus(404);
     if (userId !== validateDelete.rows[0].userId) return res.sendStatus(401);
 
-    await db.query("DELETE urls WHERE id = $1", [id]);
+    await db.query("DELETE FROM urls WHERE id = $1", [id]);
 
     return res.sendStatus(204);
   } catch (error) {
