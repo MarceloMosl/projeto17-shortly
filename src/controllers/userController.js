@@ -28,13 +28,20 @@ export async function getUsers(req, res) {
     `SELECT json_build_object(
         'id', users.id,
         'name', users.name,
-        'visitCount', ${visitSum.reduce((a, b) => a + b, 0)},
-        'shortenedUrls', json_build_object(
+        'visitCount',  ${visitSum.reduce((a, b) => a + b, 0)},
+        'shortenedUrls', json_agg(
+          json_build_object(
             'id', urls.id,
             'shortUrl', urls."shortUrl",
             'url', urls."fullUrl",
             'visitCount', urls."visitCount"
-        )) FROM urls JOIN users ON users.id = urls."userId" WHERE users.id = ${userId};
+          )
+        )
+      ) 
+      FROM urls 
+      JOIN users ON users.id = urls."userId"
+      WHERE users.id = ${userId}
+      GROUP BY users.id, users.name;
         `
   );
 
