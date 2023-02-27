@@ -79,6 +79,7 @@ export async function deleteUrl(req, res) {
   const { authorization } = req.headers;
   const { id } = req.params;
 
+  if (typeof id !== Number) return res.sendStatus(400);
   if (!authorization) return res.sendStatus(401);
 
   const token = authorization?.replace("Bearer ", "");
@@ -94,7 +95,9 @@ export async function deleteUrl(req, res) {
 
   const userId = tokenActive.rows[0].userId;
 
-  const validateDelete = db.query("SELECT * FROM urls WHERE id = $1", [id]);
+  const validateDelete = await db.query("SELECT * FROM urls WHERE id = $1", [
+    id,
+  ]);
 
   try {
     if (validateDelete.rows.length == 0) return res.sendStatus(404);
@@ -104,6 +107,6 @@ export async function deleteUrl(req, res) {
 
     return res.sendStatus(204);
   } catch (error) {
-    return res.sedn(error);
+    return res.status(500).send(error);
   }
 }
