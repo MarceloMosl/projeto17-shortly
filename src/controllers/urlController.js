@@ -39,3 +39,40 @@ export async function postUrl(req, res) {
     return res.send(error);
   }
 }
+
+export async function getUrl(req, res) {
+  const { id } = req.params;
+
+  try {
+    const promise = await db.query('SELECT * FROM urls WHERE "shortUrl" = $1', [
+      id,
+    ]);
+
+    if (promise.rows.length === 0) return res.status(404);
+
+    return res.send({
+      id: promise.rows[0].id,
+      shortUrl: promise.rows[0].shortUrl,
+      url: promise.rows[0].fullUrl,
+    });
+  } catch (error) {
+    return res.send(error);
+  }
+}
+
+export async function openUrl(req, res) {
+  const { shortUrl } = req.params;
+
+  const validateUrl = await db.query(
+    'SELECT * FROM urls WHERE "shortUrl" = $1',
+    [shortUrl]
+  );
+  if (validateUrl.rows.length == 0) return res.sendStatus(404);
+
+  await db.query(
+    'UPDATE urls SET "visitCount" = "visitCount" + 1 WHERE "shortUrl"  = $1;',
+    [shortUrl]
+  );
+
+  return res.redirect(validateUrl.rows[0].fullUrl);
+}

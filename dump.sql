@@ -61,6 +61,7 @@ CREATE TABLE public.urls (
     "userId" integer NOT NULL,
     "shortUrl" text NOT NULL,
     "fullUrl" text NOT NULL,
+    "visitCount" integer DEFAULT 0 NOT NULL,
     "createdAt" timestamp without time zone DEFAULT now() NOT NULL
 );
 
@@ -150,7 +151,7 @@ INSERT INTO public.sessions VALUES (1, 1, 'b5692c1b-dad7-4221-88b3-c4bb65411cfe'
 -- Data for Name: urls; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.urls VALUES (1, 1, 'biaa14AE', 'https://google.com', '2023-02-27 15:31:27.299838');
+INSERT INTO public.urls VALUES (1, 1, '_ANVS0hl', 'https://google.com', 4, '2023-02-27 16:07:55.839571');
 
 
 --
