@@ -3,6 +3,6 @@ import { getRank } from "../controllers/rankController.js";
 
 const rankRouter = Router();
 
-rankRouter.get("/rank", getRank);
+rankRouter.get("/ranking", getRank);
 
 export default rankRouter;
