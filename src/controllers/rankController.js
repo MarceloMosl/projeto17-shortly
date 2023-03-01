@@ -8,7 +8,7 @@ COALESCE(COUNT(urls.id), 0) AS "linksCount",
 COALESCE(SUM(urls."visitCount"), 0) AS "visitCount"
 FROM users LEFT JOIN urls ON users.id = urls."userId" 
 GROUP BY users.id
-ORDER BY "visitCount" DESC limit = 10; `
+ORDER BY "visitCount" DESC limit 10; `
     );
     return res.send(promise.rows);
   } catch (error) {
